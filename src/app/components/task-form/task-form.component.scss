@@ -1,0 +1,80 @@
+.task-form-container {
+  padding: 1rem;
+  min-width: 400px;
+
+  @media (max-width: 480px) {
+    min-width: 300px;
+    padding: 0.5rem;
+  }
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .full-width {
+    width: 100%;
+  }
+
+  .category-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .category-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+    .cancel-button {
+      min-width: 100px;
+    }
+
+    .submit-button {
+      min-width: 140px;
+
+      mat-icon {
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+// Material form field customizations
+mat-form-field {
+  .mat-mdc-form-field-subscript-wrapper {
+    font-size: 0.75rem;
+  }
+}
+
+// Responsive design
+@media (max-width: 480px) {
+  .task-form-container {
+    h2 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    .cancel-button,
+    .submit-button {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+}

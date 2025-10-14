@@ -1,0 +1,197 @@
+<mat-sidenav-container class="todo-container">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" class="todo-toolbar">
+    <span class="toolbar-title">Lista de Tareas</span>
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="onCreateTask()" matTooltip="Nueva tarea">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-icon-button (click)="onCreateCategory()" matTooltip="Nueva categoría">
+      <mat-icon>create_new_folder</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Main content -->
+  <div class="todo-content">
+    <!-- Statistics Cards -->
+    <div class="stats-section">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-number">{{ totalTasks() }}</span>
+            <span class="stat-label">Total</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card completed">
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-number">{{ completedTasks() }}</span>
+            <span class="stat-label">Completadas</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card pending">
+        <mat-card-content>
+          <div class="stat-item">
+            <span class="stat-number">{{ pendingTasks() }}</span>
+            <span class="stat-label">Pendientes</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="filters-section">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar tareas...</mat-label>
+        <input matInput
+               [value]="searchQuery()"
+               (input)="onSearchChange($any($event.target).value)"
+               placeholder="Buscar por título o descripción">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="category-filter">
+        <mat-label>Filtrar por categoría</mat-label>
+        <mat-select [value]="selectedCategoryId() || 'all'"
+                    (selectionChange)="onCategoryFilterChange($event.value)">
+          <mat-option value="all">Todas las categorías</mat-option>
+          <mat-option *ngFor="let category of storageService.categories()"
+                     [value]="category.id">
+            <div class="category-option">
+              <div class="category-color" [style.background-color]="category.color"></div>
+              {{ category.name }}
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Categories Management -->
+    <div class="categories-section">
+      <div class="section-header">
+        <h3>Categorías</h3>
+        <button mat-stroked-button (click)="onCreateCategory()">
+          <mat-icon>add</mat-icon>
+          Nueva Categoría
+        </button>
+      </div>
+
+      <div class="categories-grid">
+        <mat-card *ngFor="let category of storageService.categories()"
+                  class="category-card">
+          <mat-card-content>
+            <div class="category-header">
+              <div class="category-info">
+                <div class="category-color" [style.background-color]="category.color"></div>
+                <div class="category-details">
+                  <h4>{{ category.name }}</h4>
+                  <p *ngIf="category.description">{{ category.description }}</p>
+                </div>
+              </div>
+              <div class="category-actions">
+                <button mat-icon-button [matMenuTriggerFor]="categoryMenu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #categoryMenu="matMenu">
+                  <button mat-menu-item (click)="onEditCategory(category)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Editar</span>
+                  </button>
+                  <button mat-menu-item (click)="onDeleteCategory(category)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Eliminar</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+            <div class="category-stats">
+              <small>{{ categoryTaskCounts().get(category.id) || 0 }} tareas</small>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Tasks List -->
+    <div class="tasks-section">
+      <div class="section-header">
+        <h3>Tareas</h3>
+        <div class="task-count">
+          {{ filteredTasks().length }} de {{ totalTasks() }} tareas
+        </div>
+      </div>
+
+      <div class="tasks-list">
+        <mat-card *ngFor="let task of filteredTasks()"
+                  class="task-card"
+                  [class.completed]="task.completed">
+
+          <mat-card-content>
+            <div class="task-content">
+              <div class="task-checkbox">
+                <mat-checkbox
+                  [checked]="task.completed"
+                  (change)="onToggleTask(task)"
+                  color="primary">
+                </mat-checkbox>
+              </div>
+
+              <div class="task-details">
+                <div class="task-header">
+                  <h4 class="task-title" [class.strike-through]="task.completed">
+                    {{ task.title }}
+                  </h4>
+                  <div class="task-actions">
+                    <button mat-icon-button (click)="onEditTask(task)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="onDeleteTask(task)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <p *ngIf="task.description" class="task-description">
+                  {{ task.description }}
+                </p>
+
+                <div class="task-footer">
+                  <mat-chip
+                    *ngIf="task.categoryId"
+                    class="task-category"
+                    [style.background-color]="getCategoryColor(task.categoryId)"
+                    [style.color]="getContrastColor(getCategoryColor(task.categoryId))">
+                    {{ getCategoryName(task.categoryId) }}
+                  </mat-chip>
+
+                  <small class="task-date">
+                    {{ task.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Empty state -->
+        <div *ngIf="filteredTasks().length === 0" class="empty-state">
+          <mat-icon class="empty-icon">assignment_turned_in</mat-icon>
+          <h3>No hay tareas</h3>
+          <p *ngIf="totalTasks() === 0">
+            Crea tu primera tarea para comenzar
+          </p>
+          <p *ngIf="totalTasks() > 0 && searchQuery()">
+            No se encontraron tareas que coincidan con tu búsqueda
+          </p>
+          <p *ngIf="totalTasks() > 0 && !searchQuery() && selectedCategoryId()">
+            No hay tareas en esta categoría
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-sidenav-container>

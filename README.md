@@ -1,59 +1,161 @@
-# AccentureTodo
+# 📝 Accenture Todo Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.1.
+Una aplicación moderna de gestión de tareas desarrollada con Angular 20 y Angular Material. Esta aplicación permite crear, organizar y gestionar tareas de manera eficiente con un sistema de categorías personalizable.
 
-## Development server
+## ✨ Características
 
-To start a local development server, run:
+- 🎯 **Gestión de Tareas**: Crear, editar, eliminar y marcar tareas como completadas
+- 📂 **Sistema de Categorías**: Organizar tareas por categorías con colores personalizados
+- 🔍 **Búsqueda y Filtros**: Buscar tareas por título/descripción y filtrar por categorías
+- 📊 **Estadísticas**: Contadores en tiempo real de tareas totales, completadas y pendientes
+- 💾 **Persistencia Local**: Los datos se guardan automáticamente en el navegador
+- 📱 **Interfaz Responsiva**: Diseño moderno con Angular Material
+- 🌙 **Tema Oscuro**: Soporte para tema oscuro de Material Design
 
+## 🛠️ Tecnologías Utilizadas
+
+- **Angular 20.2.1** - Framework principal
+- **Angular Material 20.2.8** - Componentes UI
+- **TypeScript 5.9.2** - Lenguaje de programación
+- **RxJS 7.8.0** - Programación reactiva
+- **LocalStorage** - Persistencia de datos
+
+## 📋 Prerrequisitos
+
+Antes de instalar, asegúrate de tener instalado:
+
+- **Node.js** (versión 18.x o superior)
+- **npm** (viene incluido con Node.js)
+- **Angular CLI** (`npm install -g @angular/cli`)
+
+## 🚀 Instalación
+
+### 1. Clonar el repositorio
 ```bash
+git clone <url-del-repositorio>
+cd accentureTodo
+```
+
+### 2. Instalar dependencias
+```bash
+npm install
+```
+
+### 3. Ejecutar el servidor de desarrollo
+```bash
+npm start
+# o alternativamente
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+### 4. Abrir la aplicación
+Una vez que el servidor esté corriendo, abre tu navegador y navega a:
+```
+http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📖 Uso de la Aplicación
 
-```bash
-ng generate --help
+### Crear una Nueva Tarea
+1. Haz clic en el botón **"+"** (Nueva tarea) en la barra superior
+2. Completa el formulario con:
+   - **Título** (requerido)
+   - **Descripción** (opcional)
+   - **Categoría** (opcional)
+3. Haz clic en **"Crear Tarea"**
+
+### Gestionar Categorías
+1. Haz clic en el botón de carpeta **"Nueva categoría"**
+2. Crea categorías personalizadas con colores únicos
+3. Asigna categorías a tus tareas para mejor organización
+
+### Funcionalidades Disponibles
+- ✅ **Marcar tareas como completadas** - Haz clic en el checkbox
+- ✏️ **Editar tareas** - Usa el botón de editar en cada tarea
+- 🗑️ **Eliminar tareas** - Usa el botón de eliminar
+- 🔍 **Buscar tareas** - Usa el campo de búsqueda
+- 🔽 **Filtrar por categoría** - Selecciona una categoría del dropdown
+
+## 🏗️ Estructura del Proyecto
+
+```
+accentureTodo/
+├── src/
+│   ├── app/
+│   │   ├── components/          # Componentes de la aplicación
+│   │   │   ├── category-manager/    # Gestión de categorías
+│   │   │   ├── task-form/          # Formulario de tareas
+│   │   │   └── todo-container/     # Contenedor principal
+│   │   ├── models/              # Modelos de datos
+│   │   │   ├── category.model.ts
+│   │   │   └── task.model.ts
+│   │   ├── services/            # Servicios
+│   │   │   └── storage.service.ts   # Gestión de datos
+│   │   └── app.routes.ts        # Configuración de rutas
+│   ├── styles.scss              # Estilos globales
+│   └── index.html               # Página principal
+├── node_modules/                # Dependencias
+├── package.json                 # Configuración del proyecto
+└── README.md                    # Este archivo
 ```
 
-## Building
+## 🔧 Desarrollo
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Scripts Disponibles
 
 ```bash
-ng test
+# Servidor de desarrollo
+npm start
+
+# Construir para producción
+npm run build
+
+# Ejecutar tests
+npm test
+
+# Verificar código
+npm run watch
 ```
 
-## Running end-to-end tests
+### Arquitectura
 
-For end-to-end (e2e) testing, run:
+La aplicación utiliza un patrón de arquitectura basado en señales (signals) de Angular:
 
-```bash
-ng e2e
+- **StorageService**: Maneja el estado global y la persistencia
+- **TodoContainerComponent**: Componente principal que coordina la aplicación
+- **TaskFormComponent**: Maneja la creación y edición de tareas
+- **CategoryManagerComponent**: Gestiona las categorías
+
+## 🐛 Solución de Problemas
+
+### Problemas Recientes Solucionados
+
+#### 1. Categorías no cargaban en tareas nuevas
+**Problema**: Al crear una nueva tarea, las categorías existentes no aparecían en el dropdown.
+
+**Causa**: La interfaz `TaskFormData` no incluía la propiedad `categories`.
+
+**Solución**: Se actualizó la interfaz para incluir `categories?: Category[]`.
+
+#### 2. Contadores de tareas no se actualizaban
+**Problema**: Los contadores de tareas totales, completadas y pendientes no se actualizaban correctamente.
+
+**Causa**: Dependencia circular en las propiedades computadas.
+
+**Solución**: Se refactorizaron los contadores para eliminar la dependencia circular.
+
+#### 3. Contadores de categorías no se actualizaban
+**Problema**: Los contadores de tareas por categoría no se actualizaban cuando se agregaban/eliminaban tareas.
+
+**Causa**: Falta de reactividad en el método `getTasksByCategory()`.
+
+**Solución**: Se implementó una propiedad computada reactiva `categoryTaskCounts`.
+
+### Debugging
+
+Si encuentras problemas, activa los logs de consola para debugging:
+
+```typescript
+// Los logs están incluidos en el código para facilitar el debugging
+console.log('Componente - Acción realizada:', datos);
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

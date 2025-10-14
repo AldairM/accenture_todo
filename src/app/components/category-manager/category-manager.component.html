@@ -1,0 +1,79 @@
+<div class="category-form-container">
+  <h2 mat-dialog-title>
+    {{ isEditing ? 'Editar Categoría' : 'Nueva Categoría' }}
+  </h2>
+
+  <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="category-form">
+    <!-- Name Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre de la categoría</mat-label>
+      <input matInput
+             formControlName="name"
+             placeholder="Ingrese el nombre de la categoría"
+             maxlength="50">
+      <mat-hint align="end">{{ categoryForm.get('name')?.value?.length || 0 }}/50</mat-hint>
+      <mat-error *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+        {{ getErrorMessage('name') }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Color Selection -->
+    <div class="color-section">
+      <label class="color-label">Color</label>
+      <div class="color-picker">
+        <button type="button"
+                *ngFor="let color of predefinedColors"
+                class="color-option"
+                [class.selected]="categoryForm.get('color')?.value === color"
+                [style.background-color]="color"
+                (click)="onColorSelect(color)"
+                [attr.aria-label]="'Seleccionar color ' + color">
+        </button>
+      </div>
+      <mat-error *ngIf="categoryForm.get('color')?.invalid && categoryForm.get('color')?.touched">
+        {{ getErrorMessage('color') }}
+      </mat-error>
+    </div>
+
+    <!-- Description Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción (opcional)</mat-label>
+      <textarea matInput
+                formControlName="description"
+                placeholder="Ingrese una descripción para la categoría"
+                maxlength="200"
+                rows="2"></textarea>
+      <mat-hint align="end">{{ categoryForm.get('description')?.value?.length || 0 }}/200</mat-hint>
+      <mat-error *ngIf="categoryForm.get('description')?.invalid && categoryForm.get('description')?.touched">
+        {{ getErrorMessage('description') }}
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Preview -->
+    <div class="category-preview">
+      <div class="preview-label">Vista previa:</div>
+      <div class="preview-content">
+        <div class="preview-color" [style.background-color]="categoryForm.get('color')?.value"></div>
+        <span class="preview-name">{{ categoryForm.get('name')?.value || 'Nombre de categoría' }}</span>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button"
+              mat-stroked-button
+              (click)="onCancel()"
+              class="cancel-button">
+        Cancelar
+      </button>
+      <button type="submit"
+              mat-raised-button
+              color="primary"
+              [disabled]="categoryForm.invalid"
+              class="submit-button">
+        <mat-icon>{{ isEditing ? 'edit' : 'add' }}</mat-icon>
+        {{ isEditing ? 'Actualizar' : 'Crear' }} Categoría
+      </button>
+    </div>
+  </form>
+</div>
