@@ -125,32 +125,6 @@ La aplicación utiliza un patrón de arquitectura basado en señales (signals) d
 - **TodoContainerComponent**: Componente principal que coordina la aplicación
 - **TaskFormComponent**: Maneja la creación y edición de tareas
 - **CategoryManagerComponent**: Gestiona las categorías
-
-## 🐛 Solución de Problemas
-
-### Problemas Recientes Solucionados
-
-#### 1. Categorías no cargaban en tareas nuevas
-**Problema**: Al crear una nueva tarea, las categorías existentes no aparecían en el dropdown.
-
-**Causa**: La interfaz `TaskFormData` no incluía la propiedad `categories`.
-
-**Solución**: Se actualizó la interfaz para incluir `categories?: Category[]`.
-
-#### 2. Contadores de tareas no se actualizaban
-**Problema**: Los contadores de tareas totales, completadas y pendientes no se actualizaban correctamente.
-
-**Causa**: Dependencia circular en las propiedades computadas.
-
-**Solución**: Se refactorizaron los contadores para eliminar la dependencia circular.
-
-#### 3. Contadores de categorías no se actualizaban
-**Problema**: Los contadores de tareas por categoría no se actualizaban cuando se agregaban/eliminaban tareas.
-
-**Causa**: Falta de reactividad en el método `getTasksByCategory()`.
-
-**Solución**: Se implementó una propiedad computada reactiva `categoryTaskCounts`.
-
 ### Debugging
 
 Si encuentras problemas, activa los logs de consola para debugging:
